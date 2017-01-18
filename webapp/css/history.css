@@ -1,0 +1,81 @@
+.nav-sheet .his-back {
+	text-align: left;
+	width: 65px;
+	text-decoration: none;
+	color: #FFDA9A;
+	background: transparent;
+	border:none;
+	margin-right: 3px;
+}
+
+.nav-sheet .his-back:hover {
+	opacity: 0.7;
+}
+
+.nav-sheet .his-back:active {
+	opacity: 1;
+}
+
+.his-back i, .his-back span {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.his-date {
+	margin: 15px;
+	height: 24px;
+}
+
+.his-date-line {
+	display: inline-block;
+	vertical-align: middle;
+	height: 2px;
+	width: 6px;
+	background: #474a4c;
+	margin-right: 3px;
+}
+
+.his-date button {
+	margin-left: 10px;
+}
+
+.his-select {
+	width: 90px;
+	margin-right: 10px;
+}
+
+.his-grid {
+	height: 50%;
+	text-align: left;
+	text-indent: 20px;
+}
+
+.his-grid-class {
+	color: #7B8082;
+}
+
+.his-page {
+	text-align: center;
+}
+
+.his-page .currentPage {
+	margin: 0 10px;
+}
+
+
+/*date change*/
+.ss-datepicker-directive .qbdatepicker dl {
+	position: relative;
+}
+
+.ss-datepicker-directive .qbdatepicker dl dd.plus {
+	position: absolute;
+	top: 3px;
+}
+
+.ss-datepicker-directive .qbdatepicker dl dd.reduce {
+	position: absolute;
+	bottom: -1px;
+}
+
+

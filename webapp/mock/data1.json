@@ -1,0 +1,36 @@
+[
+	{
+        "date": "1M",
+        "price": 3.41
+    }, {
+        "date": "3M",
+        "price": 3.45
+    }, {
+        "date": "6M",
+        "price": 3.47
+    }, {
+        "date": "9M",
+        "price": 3.50
+    }, {
+        "date": "1Y",
+        "price": 3.52
+    }, {
+        "date": "2Y",
+        "price": 3.54
+    }, {
+        "date": "3Y",
+        "price": 3.54
+    }, {
+        "date": "4Y",
+        "price": 3.56
+    }, {
+        "date": "5Y",
+        "price": 3.60
+    }, {
+        "date": "7Y",
+        "price": 3.65
+    }, {
+        "date": "10Y",
+        "price": 3.70
+    }
+]

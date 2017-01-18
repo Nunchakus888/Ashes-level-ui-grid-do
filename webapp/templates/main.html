@@ -1,0 +1,338 @@
+<nav class="nav-sheet">
+	<div class="nav-sheet-menu">
+		<div class="ss-menu-directive" menu-data="data" menu-forced="menuForced" menu-show='menuShow'
+			 temp-sheet-nav-name="tempSheetNavName" edit-input-mark="editInputMark"></div>
+		<a href="javascript:;"
+			ng-repeat="x in sheetArr" ng-click="sheetNav($index,x)" 
+			ng-class="{'active':$index==navIndex}">
+			{{x}}
+			<input class="ss-input-text main-nav-edit" id="edit-{{x}}" ng-if="editInputMark==x"
+				ng-blur="sheetRename(x,newSheetName)" ng-model="newSheetName" autofocus="autofocus" />
+		</a>
+	</div>
+	<a href="javascript:;" class="nav-sheet-plus" ng-click="shadeMark=sheetNameMark=true">+</a>
+	<ul class="nav-sheet-set">
+		<li ng-click="goHistory()"><i class="ss-icon ss-icon-search-normal"></i><span>查询</span></li>
+		<li ng-click="shadeMark=setMark=true"><i class="ss-icon ss-icon-setting-min-normal"></i><span>设置</span></li>
+		<li><i class="ss-icon ss-icon-email"></i><span>信息</span></li>
+	</ul>
+</nav>
+
+<div class="main-sheet">
+	<div class="sheet-show-grid ss-ui-grid-default"  ui-grid="mainGridOptionsView" ui-grid-move-columns ui-grid-edit ui-grid-row-edit ui-grid-cellNav ui-grid-selection ui-grid-resize-columns  my-ui-grid-auto-resize></div>
+
+    <div class="sheet-addgrid" ng-click="shadeMark=productMark=true">添加新分栏</div>
+
+    <div class="right-tab" ng-class="{active:onOffR}">
+		<div class="right-tab-icon" ng-click="onOffR=!onOffR"><span></span></div>
+		<button class="ss-btn-lg ss-btn-info" ng-click="shadeMark=singleMark=true">报价</button><br />
+		<button class="ss-btn-lg ss-btn-info" ng-click="shadeMark=batchMark=true">批量报价</button><br />
+		<button class="ss-btn-lg ss-btn-info" ng-click="quoteFreeze(1);">冻结</button><br />
+		<button class="ss-btn-lg ss-btn-info" ng-click="quoteFreeze();">全部冻结</button><br />
+		<button class="ss-btn-lg ss-btn-info" ng-click="quoteFreeze(2);">取消冻结</button><br />
+		<button class="ss-btn-lg ss-btn-info">删除报价</button><br/>
+		<label class="shift-label">偏移
+			<input type="number" ng-model="shiftPrice" class="ss-input-text ss-input-text-sm">
+			<i class="input-up" ng-click="inputCount('shift',shiftPrice)"></i>
+			<i class="input-down" ng-click="inputCount('shift',-shiftPrice)"></i>
+		</label>
+		<label class="widen-label">拉宽
+			<input type="number" ng-model="widenPrice" class="ss-input-text ss-input-text-sm">
+			<i class="input-up" ng-click="inputCount('widen',widenPrice)"></i>
+			<i class="input-down" ng-click="inputCount('widen',-widenPrice)"></i>
+		</label>
+		<button class="ss-btn-lg ss-btn-info">确定调整</button><br />
+		<button class="ss-btn-lg ss-btn-info">取消</button><br />
+		<div class="rt-num-choose">
+			<p class="ss-text-primary">数量修改</p>
+			<button class="ss-btn ss-btn-info">20</button>
+			<button class="ss-btn ss-btn-info">50</button>
+			<button class="ss-btn ss-btn-info">100</button>
+		</div>
+	</div>
+	
+	<div class="bottom-tab" ng-class="{active:onOffB}">
+		<div class="bottom-tab-icon" ng-click="onOffB=!onOffB"><span></span></div>
+		<div class="returns-chart">
+			<h3 class="chart-title"><span>收益率曲线</span></h3>
+			<div class="chart-content">
+				<ul class="returns-nav">
+					<li>利率：</li>
+					<li ng-click="returnsNav('fr')" ng-class="{'active':returnsMark=='fr'}">FR007</li>
+					<li ng-click="returnsNav('s3m')" ng-class="{'active':returnsMark=='s3m'}">Shibor_3M</li>
+					<li ng-click="returnsNav('d1y')" ng-class="{'active':returnsMark=='d1y'}">Depo_1Y</li>
+					<li ng-click="returnsNav('son')" ng-class="{'active':returnsMark=='son'}">Shibor_O/N</li>
+				</ul>
+				<div id="returnsChart"></div>
+			</div>
+		</div>
+		<div class="price-chart">
+			<h3 class="chart-title"><span>价格曲线</span></h3>
+			<div class="chart-content">
+				<div class="chart-nav-wrap">
+					<ul class="price-nav price-nav-type">
+						<li>类型：</li>
+						<li ng-click="priceNav('type','Outright')" ng-class="{'active':priceMark.type=='Outright'}">Outright</li>
+						<li ng-click="priceNav('type','Spread')" ng-class="{'active':priceMark.type=='Spread'}">Spread</li>
+						<li ng-click="priceNav('type','Basis')" ng-class="{'active':priceMark.type=='Basis'}">Basis</li>
+						<li >‧‧‧</li>
+					</ul>
+					<ul class="price-nav price-nav-product">
+						<li>产品：</li>
+						<li ng-click="priceNav('product','sr')" ng-class="{'active':priceMark.product=='sr'}">Shibor*Repo</li>
+						<li ng-click="priceNav('product','ro')" ng-class="{'active':priceMark.product=='ro'}">Repo*OIS</li>
+						<li >‧‧‧</li>
+					</ul>
+				</div>
+				<div class="chart-nav-wrap">
+					<ul class="price-nav price-nav-date">
+						<li>期限：</li>
+						<li ng-click="priceNav('date','1Y')" ng-class="{'active':priceMark.date=='1Y'}">1Y</li>
+						<li ng-click="priceNav('date','2Y')" ng-class="{'active':priceMark.date=='2Y'}">2Y</li>
+						<li ng-click="priceNav('date','3Y')" ng-class="{'active':priceMark.date=='3Y'}">3Y</li>
+						<li ng-click="priceNav('date','4Y')" ng-class="{'active':priceMark.date=='4Y'}">4Y</li>
+						<li ng-click="priceNav('date','5Y')" ng-class="{'active':priceMark.date=='5Y'}">5Y</li>
+						<li ng-click="priceNav('date','7Y')" ng-class="{'active':priceMark.date=='7Y'}">7Y</li>
+					</ul>
+					<ul class="price-nav-btn">
+						<li ng-click="priceNav('btn','day')" ng-class="{'active':priceMark.btn=='day'}">日线</li>
+						<li ng-click="priceNav('btn','now')" ng-class="{'active':priceMark.btn=='now'}">实线</li>
+					</ul>
+				</div>
+				<div id="priceChart"></div>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<div class="bottom-ws">
+	<p class="ss-text-secondary"><span class="open"></span>{{lastTime}}</p>
+</div>
+
+<div class="shade" ng-show="shadeMark"></div>
+
+<div class="common-box new-sheet-name" ng-show="sheetNameMark">
+	<h4 class="main-set-title">新增sheet名<i class="ss-icon ss-icon-close" ng-click="shadeMark=sheetNameMark=false"></i></h4>
+	<input type="text" ng-model="newSheetName" class="ss-input-text" />
+	<div>
+		<button class="ss-btn ss-btn-info" ng-click="sheetNameBtn(newSheetName)">确认</button>
+		<button class="ss-btn ss-btn-info" ng-click="shadeMark=sheetNameMark=false">取消</button>
+	</div>
+</div>
+
+<!--<div class="warn" ng-class="{'warn-active':warnMark}">
+	<i class="body-icon ss-icon ss-icon-dialog-caution"></i>
+	<p>{{warnText}}</p>
+	<i class="body-icon ss-icon ss-icon-close" ng-click="warnMark=false"></i>
+</div>-->
+
+<div class="info-box" ng-show="infoMark">
+	<h4 class="main-set-title">信息<i class="ss-icon ss-icon-close" ng-click="infoBoxClose()"></i></h4>
+	<ul class="ss-list-group ss-back-style">
+		<li class="ss-list-item" ng-class="{'active':i.state}" ng-repeat="i in infoList track by $index">{{i.str}}</li>
+	</ul>
+</div>
+
+<!--$scope.shadeMark=$scope.priceInversionMark=true-->
+<div class="common-box sheet-del-tab" ng-show="priceInversionMark">
+	<h4 class="main-set-title">倒挂警告<i class="ss-icon ss-icon-close" ng-click="priceInversionCancel()"></i></h4>
+	<div class="sheet-tab-content">
+		<i class="body-icon ss-icon ss-icon-dialog-caution"></i>
+  		<p class="text">报价产生倒挂，是否继续倒挂？</p>
+	</div>
+	<button class="ss-btn ss-btn-info" ng-click="priceInversionConfirm()">确定</button>
+	<button class="ss-btn ss-btn-info" ng-click="priceInversionCancel()">取消</button>
+</div>
+
+<div class="common-box sheet-del-tab" ng-show="sheetTipMark">
+	<h4 class="main-set-title">提示<i class="ss-icon ss-icon-close" ng-click="shadeMark=sheetTipMark=false"></i></h4>
+	<div class="sheet-tab-content">
+		<i class="body-icon ss-icon ss-icon-dialog-error"></i>
+  		<p class="text">是否确认删除（{{tempSheetNavName}}）？</p>
+	</div>
+	<button class="ss-btn ss-btn-info" ng-click="sheetDelTip()">确定</button>
+</div>
+
+<div class="common-box main-grid-config"  ng-show="gridConfigMark">
+	<h4 class="main-set-title">表格设置<i class="ss-icon ss-icon-close" ng-click="gridSetConfirm(gridConfigArr)"></i></h4>
+	<div class="main-gc-choose-wrap">
+		<label ng-repeat="c in gridConfigArr">
+	        <input type="checkbox" class="ss-checkbox-directive" ng-model="c.nowState" ss-label="c.displayName" value="c.nowState"
+	        	ng-change="onChangeState($event,c)" />
+	    </label>
+	</div>
+	<div class="main-gc-btn-wrap">
+		<button class="ss-btn ss-btn-info" ng-click="gridSetConfirm(gridConfigArr)">确认</button>
+		<button class="ss-btn ss-btn-info" ng-click="gridSetCancel()">取消</button>
+	</div>
+</div>
+
+<div class="common-box product-box" ng-show="productMark">
+	<h4 class="main-set-title">添加产品<i class="ss-icon ss-icon-close" ng-click="productCancel()"></i></h4>
+	<ul class="product-nav">
+		<li>类型</li>
+		<li>产品</li>
+		<li>期限</li>
+		<li>添加以下产品</li>
+	</ul>
+	<div class="product-choose">
+		<ul class="product-list">
+			<li ng-repeat="m in addSingleTypeArr"
+				ng-click="productTypeClick($index)"
+				ng-class="{'active':productChoose.type==m.type}">{{m.type}}</li>
+		</ul>
+		<ul class="product-list">
+			<li ng-repeat="m in productChoose.product" 
+				ng-click="addProductTemp.product=m"
+				ng-class="{'active':addProductTemp.product==m}">{{m}}</li>
+		</ul>
+		<ul class="product-list">
+			<li ng-repeat="m in productChoose.date"
+				ng-click="addProductTemp.date=m"
+				ng-class="{'active':addProductTemp.date==m}">{{m}}</li>
+		</ul>
+		<div class="product-choose-btn">
+			<button class="ss-btn ss-btn-info product-add" ng-click="addProductBtn(addProductTemp)"><span></span></button>
+			<button class="ss-btn ss-btn-info product-del" ng-disabled="!addProductTemp.add"
+				ng-click="delProductBtn(addProductTemp)"><span></span></button>
+		</div>
+		<ul class="product-list" sv-root sv-part="addProductList">
+			<li ng-repeat="m in addProductList" ng-click="addProductTemp.add=m"
+				ng-class="{'active':addProductTemp.add==m}" sv-element>
+				<i class="ss-icon ss-icon-listview-normal" sv-handle></i>{{m}}
+			</li>
+		</ul>
+	</div>
+	<div class="product-btn-box">
+		<label class="ss-text-disabled">分栏名<input type="text" placeholder="sheet1" class="ss-input-text" /></label>
+		<div>
+			<button class="ss-btn ss-btn-info">确认</button>
+			<button class="ss-btn ss-btn-info" ng-click="productCancel()">取消</button>
+		</div>
+	</div>
+	
+</div>
+
+<div class="common-box main-set" ng-show="setMark">
+	<h4 class="main-set-title">设置<i class="ss-icon ss-icon-close" ng-click="setCancel()"></i></h4>
+	<ul class="main-set-nav">
+		<li ng-click="setNav('basic')" ng-class="{'active':setNavMark=='basic'}">基本设置</li>
+		<li ng-click="setNav('quote')" ng-class="{'active':setNavMark=='quote'}">报价设置</li>
+	</ul>
+	<div class="main-set-basic" ng-show="setNavMark=='basic'">
+		<input type="checkbox" class="ss-checkbox-directive basic-check" ng-model="prop1" value="prop1" ss-label="'隐藏没有市场报价的商品'" />
+		<input type="checkbox" class="ss-checkbox-directive basic-check" ng-model="prop2" value="prop2" ss-label="'隐藏我没有报价的商品'" />
+		<label class="ss-text-secondary">
+			<input type="checkbox" class="ss-checkbox-directive" ng-model="prop3" value="prop3" ss-label="'显示涨跌标识&nbsp;&nbsp;闪烁时长'" />
+			<input type="number" value="10" class="ss-input-text" />秒
+		</label>
+		<label class="ss-text-secondary">
+			报价数量上限<input type="number" value="200" class="ss-input-text" />ml
+		</label>
+		<label class="ss-text-secondary">
+			报价数量下限<input type="number" value="10" class="ss-input-text" />ml
+		</label>
+		<label class="ss-text-secondary">
+			<input type="checkbox" class="ss-checkbox-directive" ng-model="prop4" value="prop4" ss-label="'报价到期时间'" />
+			<input type="text" value="16:59:59" class="ss-input-text" />
+		</label>
+		<dl class="main-set-cancellation">
+			<dt class="ss-text-secondary">关联撤单设置：</dt>
+			<dd>
+				<label ng-repeat="c in setCancellation">
+			        <input type="checkbox" class="ss-checkbox-directive" ng-model="c.nowState" ss-label="c.displayName" value="c.nowState"
+			        	ng-change="onChangeState($event,c)" />
+			    </label>
+			</dd>
+		</dl>
+	</div>
+	<div class="main-set-button">
+		<button class="ss-btn ss-btn-info">恢复默认</button>
+		<div>
+			<button class="ss-btn ss-btn-info">确认</button>
+			<button class="ss-btn ss-btn-info" ng-click="setCancel()">取消</button>
+		</div>
+	</div>
+	<div ng-show="setNavMark=='quote'"></div>
+</div>
+
+<div class="common-box single-box" ng-show="singleMark">
+	<h4 class="main-set-title">新增报价<i class="ss-icon ss-icon-close" ng-click="singleCancel()"></i></h4>
+	<ul class="single-nav">
+		<li ng-repeat="x in quoteNavArr">{{x}}</li>
+	</ul>
+	<ul class="single-input">
+		<li>
+			<select class="ss-input-text ss-input-text-sm price-select"
+			ng-model="singleFrom.type" ng-options="n.type for n in singleTypeArr" ng-change="singleTypeChange(singleFrom.type)"></select>
+		</li>
+		<li>
+			<select class="ss-input-text ss-input-text-sm price-select"
+			ng-model="singleFrom.product" ng-options="n.key for n in singleFrom.type.product"></select>
+		</li>
+		<li>
+			<select class="ss-input-text ss-input-text-sm price-select"
+			ng-model="singleFrom.date" ng-options="n.key for n in singleFrom.type.date"></select>
+		</li>
+		<li><input type="number" class="ss-input-text" ng-model="singleFrom.ofr" /></li>
+		<li><input type="number" class="ss-input-text" ng-model="singleFrom.bid" /></li>
+		<li><input type="number" class="ss-input-text" ng-model="singleFrom.ofrVol" /></li>
+		<li><input type="number" class="ss-input-text" ng-model="singleFrom.bidVol" /></li>
+		<li><input type="text" class="ss-input-text" ng-model="singleFrom.user" /></li>
+	</ul>
+	<div class="main-single-button">
+		<button class="ss-btn ss-btn-info" ng-disabled="singleDisabled(singleFrom)" ng-click="submitSingleForm(singleFrom)">确定</button>
+		<button class="ss-btn ss-btn-info" ng-click="singleCancel()">取消</button>
+	</div>
+</div>
+
+<div class="common-box batch-box" ng-show="batchMark">
+	<h4 class="main-set-title">批量报价<i class="ss-icon ss-icon-close" ng-click="batchCancel()"></i></h4>
+	<div class="batch-text-box">
+		<h5 class="batch-text-title">文字识别<i class="ss-icon ss-icon-setting-min-normal" ng-click="batchSet()"></i></h5>
+		<textarea class="batch-textarea" ng-model="batchText"></textarea>
+		<button class="ss-btn ss-btn-info batch-text-btn" ng-click="batchTextImport(batchText)">导入</button>
+	</div>
+	<ul class="batch-nav">
+		<li ng-repeat="x in quoteNavArr">{{x}}</li>
+	</ul>
+	<div class="batch-input-box">
+		<ul class="single-input" ng-repeat="y in batchForm">
+			<li>
+				<select class="ss-input-text ss-input-text-sm price-select"
+				ng-model="y.type" ng-options="n.type for n in batchTypeArr" ng-change="batchTypeChange(y.type,$index)"></select>
+			</li>
+			<li>
+				<select class="ss-input-text ss-input-text-sm price-select"
+				ng-model="y.product" ng-options="n.key for n in y.type.product"></select>
+			</li>
+			<li>
+				<select class="ss-input-text ss-input-text-sm price-select"
+				ng-model="y.date" ng-options="n.key for n in y.type.date"></select>
+			</li>
+			<li><input type="number" class="ss-input-text" ng-model="y.ofr" /></li>
+			<li><input type="number" class="ss-input-text" ng-model="y.bid" /></li>
+			<li><input type="number" class="ss-input-text" ng-model="y.ofrVol" /></li>
+			<li><input type="number" class="ss-input-text" ng-model="y.bidVol" /></li>
+			<li><input type="text" class="ss-input-text" ng-model="y.user" /></li>
+			<i class="ss-icon ss-icon-close" ng-click="delBarch($index)"></i>
+		</ul>
+	</div>
+	<div class="batch-input-set">
+		<div class="batch-btn-box">
+			<span>平移</span>
+			<button class="ss-btn ss-btn-info" ng-disabled="!batchForm.length" ng-click="batchAdjust('shift',+0.25)">+</button>
+			<button class="ss-btn ss-btn-info" ng-disabled="!batchForm.length" ng-click="batchAdjust('shift',-0.25)">－</button>
+		</div>
+		<div class="batch-btn-box">
+			<span>拉宽</span>
+			<button class="ss-btn ss-btn-info" ng-disabled="!batchForm.length" ng-click="batchAdjust('widen',+0.25)">+</button>
+			<button class="ss-btn ss-btn-info" ng-disabled="!batchForm.length" ng-click="batchAdjust('widen',-0.25)">－</button>
+		</div>
+		<button class="ss-btn ss-btn-info batch-text-btn" ng-click="addNewPrice()">增加报价</button>
+	</div>
+	<div class="main-batch-button">
+		<button class="ss-btn ss-btn-info" ng-disabled="batchDisabled(batchForm)" ng-click="submitBatchForm(batchForm)">确定</button>
+		<button class="ss-btn ss-btn-info" ng-click="batchCancel()">取消</button>
+	</div>
+</div>

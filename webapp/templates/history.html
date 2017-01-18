@@ -1,0 +1,30 @@
+<nav class="nav-sheet">
+	<a ng-click="goMain()" class="his-back"><i class="ss-icon ss-icon-backward-normal"></i><span>返回</span></a>
+	<a href="javascript:;" ng-click="navEvent('deal')" ng-class="{'active':navMark=='deal'}">成交</a>
+	<a href="javascript:;" ng-click="navEvent('order')" ng-class="{'active':navMark=='order'}">订单</a>
+	<a href="javascript:;" ng-click="navEvent('swap')" ng-class="{'active':navMark=='swap'}">X-swap</a>
+	<ul class="nav-sheet-set">
+		<li><i class="ss-icon ss-icon-email"></i><span>信息</span></li>
+	</ul>
+</nav>
+<div class="his-date">
+	<select class="ss-input-text ss-input-text-sm his-select" ng-show="navMark=='order'"
+			ng-model="orderSelect" ng-options="n.name for n in orderOptionArr" ng-change="optionChange()">
+	</select>
+	<select class="ss-input-text ss-input-text-sm his-select" ng-show="navMark=='swap'"
+			ng-model="swapSelect" ng-options="m.name for m in swapOptionArr" ng-change="optionChange()">
+	</select>
+	<input class="ss-datepicker-directive" ng-model="date1" picker-config="datePickerConfig1"></input>
+	<span class="his-date-line"></span>
+	<input class="ss-datepicker-directive" ng-model="date2" picker-config="datePickerConfig2"></input>
+	<input type="text" class="ss-input-text" ng-model="searchInput" />
+	<button class="ss-btn-sm ss-btn-info" ng-click="search(date1,date2,navMark)" ng-disabled="date1>date2">查询</button>
+</div>
+
+<div class="his-grid ss-ui-grid-default"  ui-grid="hisGridOptionsView" ui-grid-move-columns ui-grid-edit ui-grid-row-edit ui-grid-selection ui-grid-resize-columns  my-ui-grid-auto-resize></div>
+
+<div class="his-page">
+	<button class="ss-btn ss-btn-info" ng-disabled="upLock" ng-click="pageUp()">上一页</button>
+	<span class="currentPage ss-text-secondary">第{{currentPage}}页</span>
+	<button class="ss-btn ss-btn-info" ng-disabled="downLock" ng-click="pageDown()">下一页</button>
+</div>
